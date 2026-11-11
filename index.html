@@ -118,10 +118,9 @@ async function order(prefix, btn) {
       link: link,
       quantity: qty
     }).toString();
+// Pake VexoAPI buat nembus CORS
+const fetchUrl = 'https://vexoapi.site/api/proxy?key=nCKXQBRgeq7dIfGQ&url=' + encodeURIComponent(targetUrl);
 
-    // Pake AllOrigins buat nembus CORS
-    const fetchUrl = 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(targetUrl);
-    
     const r = await fetch(fetchUrl);
     const j = await r.json();
     
