@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Panel Order</title>
+<style>
+  :root { color-scheme: dark; }
+  body { font-family: system-ui, sans-serif; max-width: 640px; margin: 1rem auto; padding: 0 1rem 3rem; background: #0d0d0d; color: #eaeaea; }
+  h1 { font-size: 1.2rem; margin: 0 0 .25rem; }
+  h2 { font-size: .95rem; color: #8ab4f8; margin: .5rem 0 .6rem; }
+  section { border: 1px solid #262626; border-radius: 10px; padding: 1rem; margin: 1rem 0; background: #141414; }
+  input, select, button { width: 100%; padding: .6rem; border-radius: 6px; border: 1px solid #2a2a2a; background: #1a1a1a; color: #eaeaea; margin: .3rem 0; font: inherit; box-sizing: border-box; }
+  button { background: #2563eb; border: none; cursor: pointer; font-weight: 600; margin-top: .6rem; }
+  button:disabled { opacity: .5; cursor: wait; }
+  #log { background: #000; border: 1px solid #262626; border-radius: 8px; padding: .75rem; font-family: monospace; font-size: .78rem; white-space: pre-wrap; min-height: 80px; max-height: 260px; overflow: auto; margin-top: 1.5rem; }
+</style>
+</head>
+<body>
+
+<h1>Panel Order</h1>
+
+<section>
+  <h2>YouTube</h2>
+  <input id="yt-url" placeholder="URL video">
+  <select id="yt-svc">
+    <option value="yt_views">Views</option>
+    <option value="yt_likes">Likes</option>
+    <option value="yt_subs">Subscribers</option>
+  </select>
+  <input id="yt-qty" type="number" value="100" min="1">
+  <button data-p="yt">Order</button>
+</section>
+
+<section>
+  <h2>TikTok</h2>
+  <input id="tt-url" placeholder="URL video / profil">
+  <select id="tt-svc">
+    <option value="tt_views">Views</option>
+    <option value="tt_likes">Likes</option>
+    <option value="tt_followers">Followers</option>
+  </select>
+  <input id="tt-qty" type="number" value="100" min="1">
+  <button data-p="tt">Order</button>
+</section>
+
+<section>
+  <h2>Instagram</h2>
+  <input id="ig-url" placeholder="URL post / reel / profil">
+  <select id="ig-svc">
+    <option value="ig_views">Views</option>
+    <option value="ig_likes">Likes</option>
+    <option value="ig_followers">Followers</option>
+  </select>
+  <input id="ig-qty" type="number" value="100" min="1">
+  <button data-p="ig">Order</button>
+</section>
+
+<section>
+  <h2>WhatsApp Channel</h2>
+  <input id="wa-url" placeholder="URL channel">
+  <select id="wa-svc">
+    <option value="wa_reactions">Reactions</option>
+    <option value="wa_followers">Followers</option>
+  </select>
+  <input id="wa-qty" type="number" value="100" min="1">
+  <button data-p="wa">Order</button>
+</section>
+
+<pre id="log">siap.</pre>
+
+<script>
+/* ============================================================
+   GANTI 3 BARIS INI:
+   ============================================================ */
+const SMM_API = 'https://jap.com/api/v2';       // ← API URL panel SMM kamu
+const SMM_KEY = 'PASTE_API_KEY_DI_SINI';         // ← API key panel SMM kamu
+
+const SERVICE_MAP = {
+  /* GANTI angka di kanan dengan ID layanan dari panel SMM kamu.
+     Hapus baris kalau panel kamu nggak punya layanan itu. */
+  yt_views:     '101',
+  yt_likes:     '102',
+  yt_subs:      '103',
+  tt_views:     '201',
+  tt_likes:     '202',
+  tt_followers: '203',
+  ig_views:     '301',
+  ig_likes:     '302',
+  ig_followers: '303',
+  wa_reactions: '401',
+  wa_followers: '402'
+};
+/* ============================================================ */
+
+const MAP = {
+  yt: { url:'yt-url', svc:'yt-svc', qty:'yt-qty' },
+  tt: { url:'tt-url', svc:'tt-svc', qty:'tt-qty' },
+  ig: { url:'ig-url', svc:'ig-svc', qty:'ig-qty' },
+  wa: { url:'wa-url', svc:'wa-svc', qty:'wa-qty' }
+};
+
+document.querySelectorAll('[data-p]').forEach(btn => {
+  btn.addEventListener('click', () => order(btn.dataset.p, btn));
+});
+
+async function order(prefix, btn) {
+  const m = MAP[prefix];
+  const svcKey = document.getElementById(m.svc).value;
+  const svcId  = SERVICE_MAP[svcKey];
+  const link   = document.getElementById(m.url).value.trim();
+  const qty    = parseInt(document.getElementById(m.qty).value, 10);
+
+  if (!svcId)  return log('LAYANAN INI BELUM ADA DI SERVICE_MAP');
+  if (!link)   return log('URL kosong');
+  if (!qty || qty < 1) return log('Quantity tidak valid');
+
+  const url = SMM_API + '?'
+    + 'key='      + encodeURIComponent(SMM_KEY) + '&'
+    + 'action=add&'
+    + 'service='  + encodeURIComponent(svcId) + '&'
+    + 'link='     + encodeURIComponent(link) + '&'
+    + 'quantity=' + qty;
+
+  btn.disabled = true;
+  log('kirim → ' + svcKey + ' qty=' + qty);
+
+  try {
+    const r = await fetch(url);
+    const j = await r.json();
+    log('balasan → ' + JSON.stringify(j));
+    if (j.order) log('✔ order ID ' + j.order + ' — cek menu Orders di panel SMM kamu');
+    else if (j.error) log('✘ ' + j.error);
+  } catch (e) {
+    log('✘ gagal: ' + e.message + ' (CORS? panel SMM blokir browser — lihat catatan di bawah)');
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+function log(s) {
+  const el = document.getElementById('log');
+  const t = new Date().toLocaleTimeString('id-ID');
+  el.textContent = '[' + t + '] ' + s + '\n' + el.textContent;
+}
+</script>
+</body>
+</html>
