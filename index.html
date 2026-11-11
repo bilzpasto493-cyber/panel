@@ -28,7 +28,7 @@
     <option value="yt_likes">Likes</option>
     <option value="yt_subs">Subscribers</option>
   </select>
-  <input id="yt-qty" type="text" value="100" min="1">
+  <input id="yt-qty" type="text" value="100">
   <button data-p="yt">Order</button>
 </section>
 
@@ -40,7 +40,7 @@
     <option value="tt_likes">Likes</option>
     <option value="tt_followers">Followers</option>
   </select>
-  <input id="tt-qty" type="text"  value="100" min="1">
+  <input id="tt-qty" type="text" value="100">
   <button data-p="tt">Order</button>
 </section>
 
@@ -52,7 +52,7 @@
     <option value="ig_likes">Likes</option>
     <option value="ig_followers">Followers</option>
   </select>
-  <input id="ig-qty" type="text" value="100" min="1">
+  <input id="ig-qty" type="text" value="100">
   <button data-p="ig">Order</button>
 </section>
 
@@ -63,29 +63,40 @@
     <option value="wa_reactions">Reactions</option>
     <option value="wa_followers">Followers</option>
   </select>
-  <input id="wa-qty" type="text"   value="100" min="1">
+  <input id="wa-qty" type="text" value="100">
   <button data-p="wa">Order</button>
 </section>
 
 <pre id="log">siap.</pre>
 
 <script>
-// =========================================================
-// GANTI 2 BARIS INI PAKAI DATA DARI PANEL SMM LO
-// =========================================================
-  // URL panel lo
-const SMM_KEY = 'PASTE_API_KEY_LO';        // API key lo
-
-const SERVICE_MAP = {
-  yt_views: '101', yt_likes: '102', yt_subs: '103',
-  tt_views: '201', tt_likes: '202', tt_followers: '203',
-  ig_views: '301', ig_likes: '302', ig_followers: '303',
-  wa_reactions: '401', wa_followers: '402'
-};
-
-// URL Cloudflare Worker lo yang tadi
+/* ============================================================
+   GANTI 2 BARIS DI BAWAH INI:
+   ============================================================ */
+// 1. URL Worker Cloudflare lo (harus persis kayak gini)
 const WORKER_URL = 'https://panel.bilzpasto493.workers.dev';
-// =========================================================
+
+// 2. URL API Panel SMM lo (ganti kalau bukan jap.com)
+const SMM_API = 'https://jap.com/api/v2'; 
+
+// 3. API Key Panel SMM lo (HAPUS tulisan 12345, ganti API Key asli)
+const SMM_KEY = '12345'; 
+
+// 4. ID Layanan (sesuaikan sama menu Services di panel lo)
+const SERVICE_MAP = {
+  yt_views:     '101',
+  yt_likes:     '102',
+  yt_subs:      '103',
+  tt_views:     '201',
+  tt_likes:     '202',
+  tt_followers: '203',
+  ig_views:     '301',
+  ig_likes:     '302',
+  ig_followers: '303',
+  wa_reactions: '401',
+  wa_followers: '402'
+};
+/* ============================================================ */
 
 const MAP = {
   yt: { url:'yt-url', svc:'yt-svc', qty:'yt-qty' },
