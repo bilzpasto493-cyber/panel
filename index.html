@@ -28,7 +28,7 @@
     <option value="yt_likes">Likes</option>
     <option value="yt_subs">Subscribers</option>
   </select>
-  <input id="yt-qty" type="number" value="100" min="1">
+  <input id="yt-qty" type="text" value="100" min="1">
   <button data-p="yt">Order</button>
 </section>
 
@@ -40,7 +40,7 @@
     <option value="tt_likes">Likes</option>
     <option value="tt_followers">Followers</option>
   </select>
-  <input id="tt-qty" type="number" value="100" min="1">
+  <input id="tt-qty" type="text"  value="100" min="1">
   <button data-p="tt">Order</button>
 </section>
 
@@ -52,7 +52,7 @@
     <option value="ig_likes">Likes</option>
     <option value="ig_followers">Followers</option>
   </select>
-  <input id="ig-qty" type="number" value="100" min="1">
+  <input id="ig-qty" type="text" value="100" min="1">
   <button data-p="ig">Order</button>
 </section>
 
@@ -63,7 +63,7 @@
     <option value="wa_reactions">Reactions</option>
     <option value="wa_followers">Followers</option>
   </select>
-  <input id="wa-qty" type="number" value="100" min="1">
+  <input id="wa-qty" type="text"   value="100" min="1">
   <button data-p="wa">Order</button>
 </section>
 
@@ -84,7 +84,7 @@ const SERVICE_MAP = {
 };
 
 // URL Cloudflare Worker lo yang tadi
-const WORKER_URL = 'https://fragrant-mouse-3b3a.bilzpasto493.workers.dev';
+const WORKER_URL = 'https://panel.bilzpasto493.workers.dev';
 // =========================================================
 
 const MAP = {
