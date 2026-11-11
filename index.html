@@ -120,7 +120,7 @@ async function order(prefix, btn) {
     }).toString();
 
     // Pake AllOrigins buat nembus CORS
-    const fetchUrl = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(targetUrl);
+    const fetchUrl = 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(targetUrl);
     
     const r = await fetch(fetchUrl);
     const j = await r.json();
