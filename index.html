@@ -119,8 +119,8 @@ async function order(prefix, btn) {
       quantity: qty
     }).toString();
 
-    // Pake proxy corsproxy.io buat nembus blokir
-    const fetchUrl = 'https://corsproxy.io/?' + encodeURIComponent(targetUrl);
+    // Pake AllOrigins buat nembus CORS
+    const fetchUrl = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(targetUrl);
     
     const r = await fetch(fetchUrl);
     const j = await r.json();
