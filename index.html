@@ -70,26 +70,22 @@
 <pre id="log">siap.</pre>
 
 <script>
-/* ============================================================
-   GANTI 3 BARIS INI:
-   ============================================================ */
-const SMM_API = 'https://peaksmm.com/api/v2';       // ← API URL panel SMM kamu
-const SMM_KEY = 'a1b2c3d4e5f6g7h8i9j0';         // ← API key panel SMM kamu
+// =========================================================
+// GANTI 2 BARIS INI PAKAI DATA DARI PANEL SMM LO
+// =========================================================
+  // URL panel lo
+const SMM_KEY = 'PASTE_API_KEY_LO';        // API key lo
 
 const SERVICE_MAP = {
-  yt_views:     '1520',
-  yt_likes:     '1521',
-  yt_subs:      '1522',
-  tt_views:     '2450',
-  tt_likes:     '2451',
-  tt_followers: '2452',
-  ig_views:     '3310',
-  ig_likes:     '3311',
-  ig_followers: '3312',
-  wa_reactions: '4401',
-  wa_followers: '4402'
+  yt_views: '101', yt_likes: '102', yt_subs: '103',
+  tt_views: '201', tt_likes: '202', tt_followers: '203',
+  ig_views: '301', ig_likes: '302', ig_followers: '303',
+  wa_reactions: '401', wa_followers: '402'
 };
-/* ============================================================ */
+
+// URL Cloudflare Worker lo yang tadi
+const WORKER_URL = 'https://fragrant-mouse-3b3a.bilzpasto493.workers.dev';
+// =========================================================
 
 const MAP = {
   yt: { url:'yt-url', svc:'yt-svc', qty:'yt-qty' },
@@ -113,24 +109,27 @@ async function order(prefix, btn) {
   if (!link)   return log('URL kosong');
   if (!qty || qty < 1) return log('Quantity tidak valid');
 
-  const url = SMM_API + '?'
-    + 'key='      + encodeURIComponent(SMM_KEY) + '&'
-    + 'action=add&'
-    + 'service='  + encodeURIComponent(svcId) + '&'
-    + 'link='     + encodeURIComponent(link) + '&'
-    + 'quantity=' + qty;
-
   btn.disabled = true;
   log('kirim → ' + svcKey + ' qty=' + qty);
 
   try {
-    const r = await fetch(url);
+    const r = await fetch(WORKER_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        key: SMM_KEY,
+        service: svcId,
+        link: link,
+        quantity: qty
+      })
+    });
+    
     const j = await r.json();
     log('balasan → ' + JSON.stringify(j));
     if (j.order) log('✔ order ID ' + j.order + ' — cek menu Orders di panel SMM kamu');
     else if (j.error) log('✘ ' + j.error);
   } catch (e) {
-    log('✘ gagal: ' + e.message + ' (CORS? panel SMM blokir browser — lihat catatan di bawah)');
+    log('✘ gagal: ' + e.message);
   } finally {
     btn.disabled = false;
   }
